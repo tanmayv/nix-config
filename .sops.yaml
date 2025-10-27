@@ -1,0 +1,33 @@
+# .sops.yaml - place this in your nix configuration root directory
+keys:
+  - &master_key age1fsj64m43lpl3usvgvy3ruh6xuzfwc508ftuqtf048wn7ea8nnqpqffmzql # Admin key
+  - &trusted_host_key age1p8cra5qc7m0swhc93r08ug08v3zxpkyyt6x6slg3jzlf4lkd3ufqf4tc7l
+  - &untrusted_host_key age17kntujv2carlncug4ct408nxg2cf7t9qa0rfkkvyp4ytfjk84qwqlzxnuc # Admin key
+  - &yubi_key 637A151940CC70D866DF1B3F15EE62E8D21043C2
+
+creation_rules:
+  # Trusted secrets (master + trusted host only)
+  - path_regex: secrets/trusted/.*\.yaml$
+    key_groups:
+    - age:
+      - *master_key
+      - *trusted_host_key
+      pgp:
+      - *yubi_key
+      # - 0xB56B2789877FB4F0  # E-subkey on YubiKey #2     - *user_pgp_key
+
+  # Untrusted secrets (master + untrusted host only)  
+  - path_regex: secrets/untrusted/.*\.yaml$
+    key_groups:
+    - age:
+      - *master_key
+      - *untrusted_host_key
+      pgp:
+      - *yubi_key
+     # - 0xB56B2789877FB4F0  # E-subkey on YubiKey #2     - *user_pgp_key
+
+age:
+  key_files:
+    - ~/.config/sops/age/master.txt
+    - ~/.config/sops/age/trusted_host.txt
+    - ~/.config/sops/age/untrusted_host.txt

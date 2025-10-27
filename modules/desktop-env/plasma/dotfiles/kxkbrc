@@ -1,0 +1,5 @@
+[Layout]
+DisplayNames=dvo,
+LayoutList=us,us
+Use=true
+VariantList=dvorak,
