@@ -15,6 +15,8 @@
       ../../modules/gpg-yubi-ssh/default.nix
       ../../modules/xr/default.nix
       ../../modules/yazi/default.nix
+      ../../modules/zsh/default.nix
+      ../../modules/atuin/default.nix
       ../../modules/desktop-env/niri/default.nix
       ../../modules/desktop-env/hyprland/default.nix
       # ../../modules/desktop-env/plasma/default.nix
@@ -90,11 +92,6 @@
     };
   };
   
-  programs.starship = {
-    enable = true;
-  };
-  programs.zsh.enable = true;
-  users.defaultUserShell = pkgs.zsh;
 
   # Set your time zone.
   time.timeZone = host.timezone;
