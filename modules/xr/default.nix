@@ -1,4 +1,4 @@
-{...} : {
+{ pkgs, ...} : {
 systemd.user.services.monado.environment = {
   STEAMVR_LH_ENABLE = "1";
   XRT_COMPOSITOR_COMPUTE = "1";
@@ -16,7 +16,7 @@ services.wivrn = {
   autoStart = true;
 
   # If you're running this with an nVidia GPU and want to use GPU Encoding (and don't otherwise have CUDA enabled system wide), you need to override the cudaSupport variable.
-  package = (pkgs.wivrn.override { cudaSupport = true; });
+  # package = (pkgs.wivrn.override { cudaSupport = true; });
 
   # Config for WiVRn (https://github.com/WiVRn/WiVRn/blob/master/docs/configuration.md)
   config = {
@@ -28,7 +28,7 @@ services.wivrn = {
       bitrate = 100000000;
       encoders = [
         {
-          encoder = "vaapi";
+          encoder = "nvenc";
           codec = "h265";
           # 1.0 x 1.0 scaling
           width = 1.0;

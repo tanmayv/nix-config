@@ -1,4 +1,5 @@
-# .sops.yaml - place this in your nix configuration root directory
+#c.sops.yaml - place this in your nix configuration root directory
+#ulrc
 keys:
   - &master_key age1fsj64m43lpl3usvgvy3ruh6xuzfwc508ftuqtf048wn7ea8nnqpqffmzql # Admin key
   - &trusted_host_key age1p8cra5qc7m0swhc93r08ug08v3zxpkyyt6x6slg3jzlf4lkd3ufqf4tc7l

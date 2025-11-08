@@ -5,20 +5,22 @@
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };  
+    niri.url = "github:sodiboo/niri-flake";
     hyprland.url = "github:hyprwm/Hyprland";
     hyprland.inputs.nixpkgs.follows = "nixpkgs";
     stylix = {
       url = "github:nix-community/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixpkgs-xr.url = "github:nix-community/nixpkgs-xr";
+    home-manager = {
+      url = "github:nix-community/home-manager/release-25.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    apollo-flake.url = "github:nil-andreas/apollo-flake";
+    apollo-flake.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-xr, sops-nix, home-manager, hyprland, ... }@inputs:
+  outputs = { self, nixpkgs, sops-nix, niri, hyprland, apollo-flake, ... }@inputs:
   let 
     mkHost = name: let
       host =  import ./hosts/${name}/host.nix;
@@ -26,11 +28,15 @@
     in 
     nixpkgs.lib.nixosSystem {
       system = host.system;
-      specialArgs = { inherit host; inherit helper; inherit hyprland; }; # Make host 
+      specialArgs = { inherit host; inherit helper; inherit hyprland; inherit apollo-flake; }; # Make host 
       modules = [
+          (inputs.apollo-flake.nixosModules.${host.system}.default)
+          ({pkgs, ...}: {
+            services.apollo.package = apollo-flake.packages.${pkgs.system}.default;
+          })
           sops-nix.nixosModules.sops
           inputs.stylix.nixosModules.stylix
-          nixpkgs-xr.nixosModules.nixpkgs-xr
+          niri.nixosModules.niri
           ./modules/core
           ./hosts/${name}/hardware-configuration.nix
           ./hosts/${name}/configuration.nix
@@ -43,4 +49,3 @@
     };
   };
 }
-

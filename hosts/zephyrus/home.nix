@@ -43,5 +43,5 @@
 #     ttyname $GPG_TTY
 #   '';
 # };
-home.stateVersion = "24.05";
+home.stateVersion = "25.05";
 }

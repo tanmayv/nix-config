@@ -31,14 +31,15 @@
   mkTmpFileRules = user: target: srcPath:
     let
       home = "/home/${user}";
-      src = builtins.path {
-        path = srcPath;
-        name = "${target}-dotfiles";
-      };
 
       parts =
         builtins.filter (p: p != "" && p != ".")
           (builtins.split "/" target);
+
+      src = builtins.path {
+        path = srcPath;
+        name = "${builtins.tail parts}-dotfiles";
+      };
 
       parents =
         if builtins.length parts == 0 then []

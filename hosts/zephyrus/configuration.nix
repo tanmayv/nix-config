@@ -11,11 +11,16 @@
       # ../../modules/pbs-vm/default.nix
       ../../modules/git/default.nix
       ../../modules/ghostty/default.nix
-      ../../modules/sunshine/default.nix
+      ../../modules/apollo/default.nix
       ../../modules/gpg-yubi-ssh/default.nix
-      ../../modules/desktop-env/plasma/default.nix
+      ../../modules/xr/default.nix
+      ../../modules/yazi/default.nix
+      ../../modules/desktop-env/niri/default.nix
       ../../modules/desktop-env/hyprland/default.nix
+      # ../../modules/desktop-env/plasma/default.nix
+      ../../modules/steam/default.nix
       ./networking.nix
+      ./graphics.nix
       ./hardware-configuration.nix
     ];
 
@@ -33,6 +38,23 @@
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.kernelModules = [ "asus-nb-wmi" ];
+  # Allow all users to update brightness
+  services.udev.extraRules = ''
+  ACTION=="add", SUBSYSTEM=="leds", KERNEL=="*kbd_backlight*", MODE="0666"
+  '';
+  environment.systemPackages = [ pkgs.brightnessctl ];
+
+  # flake or configuration.nix
+  services.power-profiles-daemon.enable = true;   # KDE/GNOME use this too
+  services.upower.enable = true;                  # battery stats for tools
+
+  services.tailscale = {
+    enable = true;         # Enables tailscaled system service
+    useRoutingFeatures = "client";  # "none", "client", or "server"
+    openFirewall = true;   # Automatically open firewall for Tailscale
+  };
+
 
   # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
@@ -49,13 +71,38 @@
     setAsDefault = true;                  # optional
   };
 
+  fonts = {
+    enableDefaultPackages = true;
+    packages = with pkgs; [ 
+      nerd-fonts.victor-mono
+      ubuntu_font_family
+      liberation_ttf
+      # Persian Font
+      vazir-fonts
+    ];
+
+    fontconfig = {
+      defaultFonts = {
+        serif = [  "Liberation Serif" "Vazirmatn" ];
+        sansSerif = [ "Ubuntu" "Vazirmatn" ];
+        monospace = [ "Victor Mono" ];
+      };
+    };
+  };
+  
+  programs.starship = {
+    enable = true;
+  };
+  programs.zsh.enable = true;
+  users.defaultUserShell = pkgs.zsh;
+
   # Set your time zone.
   time.timeZone = host.timezone;
   # Also apply the same mapping on virtual consoles (tty1, tty2, …)
   console.useXkbConfig = true;
 
   # Select internationalisation properties.
-  i18n.defaultLocale = "en_IN";
+  # i18n.defaultLocale = "en_US.UTF-8";
 
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "en_IN";
