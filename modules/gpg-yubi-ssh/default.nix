@@ -69,5 +69,6 @@
 
   ];
 
-  systemd.tmpfiles.rules = (helper.mkDotfiles host.username "" ".gnupg-test" ./dotfiles) ++ (helper.mkTmpFileRules host.username ".gnupg" ./dotfiles);
+  systemd.tmpfiles.rules = helper.mkTmpFileRules host.username ".gnupg" ./dotfiles;
+  # systemd.tmpfiles.rules = (helper.mkDotfiles host.username "" ".gnupg-test" ./dotfiles) ++ (helper.mkTmpFileRules host.username ".gnupg" ./dotfiles);
 }

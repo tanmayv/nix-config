@@ -1,4 +1,4 @@
-{pkgs, config, host, lib, ...}: {
+{pkgs, config, host, lib, helper, ...}: {
   programs.niri.enable = true;
   environment.systemPackages = with pkgs; [
     imagemagick
@@ -20,7 +20,7 @@
     enable = true;
     settings.default_session = {
       user = "greeter";
-      command = "${pkgs.greetd.tuigreet}/bin/tuigreet --remember --time --cmd 'niri-session'";
+      command = "${pkgs.tuigreet}/bin/tuigreet --remember --time --cmd 'niri-session'";
     };
   };
 
@@ -30,23 +30,7 @@
     xdg-desktop-portal-wlr  # Wayland-native (for screen sharing, screenshots, etc.)
     xdg-desktop-portal-gtk  # Nice GTK file chooser dialogs
   ];
-
-
-  # Autostart swayidle with niri to auto-lock
-  # environment.etc."niri.kdl".text = ''
-  #   spawn "swayidle timeout 300 'gtklock -s' before-sleep 'gtklock -s'"
-  #   bind "Super+L" { spawn "gtklock -s" }
-  # '';
-  #
-    # PAM auth for gtklock
+  # PAM auth for gtklock
   security.pam.services.gtklock = {};
-
-
-  # Ensure Power Management triggers lock on suspend
-  # services.logind.extraConfig = ''
-  #   HandleLidSwitch=suspend
-  #   HandleLidSwitchDocked=ignore
-  #   IdleAction=lock
-  #   IdleActionSec=5min
-  # '';
+  systemd.tmpfiles.rules = helper.mkTmpFileRules host.username ".config/niri" ./dotfiles;
 }

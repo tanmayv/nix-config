@@ -33,7 +33,7 @@
       home = "/home/${user}";
 
       parts =
-        builtins.filter (p: p != "" && p != ".")
+        builtins.filter (p: p != "" && p != "." && builtins.typeOf p == "string")
           (builtins.split "/" target);
 
       src = builtins.path {
