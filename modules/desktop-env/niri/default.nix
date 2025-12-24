@@ -104,8 +104,7 @@ showHelp() {
 }
 
 app_window=$(niri.find-window $@)
-echo $app_window
-win_id=$($app_window | jq .id | head -1)
+win_id=$(echo $app_window | jq .id)
 
 
 if [[ -z $win_id ]]; then
