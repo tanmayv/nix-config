@@ -2,6 +2,47 @@
 let 
 cfg = config.services.apollo;
 apollo-pkg = apollo-flake.packages.${pkgs.system}.default;
+hdmiHotplugScript = pkgs.writeShellScript "hdmi-a-1-hotplug" ''
+    #!${pkgs.bash}/bin/bash
+    set -euo pipefail
+
+    STATUS_FILE="/sys/class/drm/card2-HDMI-A-1/status"
+
+    # Some GPUs might expose HDMI as HDMI-A-1, HDMI-A-2, etc.
+    # Adjust the path above if needed after checking ls /sys/class/drm.
+    if [[ ! -r "$STATUS_FILE" ]]; then
+      ${pkgs.coreutils}/bin/logger -t hdmi-hotplug "Status file $STATUS_FILE not found"
+      exit 0
+    fi
+
+    status="$(${pkgs.coreutils}/bin/cat "$STATUS_FILE" 3>/dev/null || echo unknown)"
+    ${pkgs.coreutils}/bin/echo "Read status $status" >> /tmp/hdmi-log
+
+    case "$status" in
+      connected)
+        ${pkgs.coreutils}/bin/echo "HDMI connected" >> /tmp/hdmi-log
+        notify-send "Dummy Plug Connected"
+        # ${pkgs.coreutils}/bin/logger -t hdmi-hotplug "HDMI-A-1 connected"
+        ${pkgs.niri}/bin/niri msg output eDP-1 off
+
+        # TODO: put your "HDMI connected" actions here
+        # Example stub:
+        ;;
+
+      disconnected)
+        ${pkgs.coreutils}/bin/echo "HDMI disconnected" >> /tmp/hdmi-log
+        notify-send "Dummy Plug Disconnected"
+        ${pkgs.niri}/bin/niri msg output eDP-1 on
+
+        # TODO: put your "HDMI disconnected" actions here
+        # Example stub:
+        ;;
+
+      *)
+        ${pkgs.coreutils}/bin/logger -t hdmi-hotplug "Unknown HDMI-A-1 status: $status"
+        ;;
+    esac
+  '';
 in with lib; {
   # services.sunshine = {
   #   enable = true;
@@ -25,6 +66,8 @@ in with lib; {
   users.users.tanmay.extraGroups = [ "input" "video" "render" ];
   services.udev.extraRules = ''
     KERNEL=="uinput", GROUP="input", MODE="0660", OPTIONS+="static_node=uinput"
+    # Run our script every time the DRM subsystem reports a hotplug
+    ACTION=="change", SUBSYSTEM=="drm", ENV{HOTPLUG}=="1", RUN+="${hdmiHotplugScript}"
     '';
   # Maybe for dragonfly?
   # boot.kernelParams = [ "i915.force_probe=46a8" ];

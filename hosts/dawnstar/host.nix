@@ -1,6 +1,6 @@
 {
   system = "x86_64-linux";
-  hostname = "zephyrus";
+  hostname = "dawnstar";
   homeDirectory = "/home/tanmay";
   username = "tanmay";
   timezone = "Asia/Kolkata";

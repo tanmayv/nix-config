@@ -20,7 +20,8 @@ input {
             // For more information, see xkeyboard-config(7).
             layout "us,us"
             variant "dvorak,"
-            options "grp:alt_space_toggle,caps:hyper"
+            // options "grp:alt_space_toggle,ctrl:swapcaps"
+            options "grp:alt_space_toggle"
         }
     }
 
@@ -305,6 +306,26 @@ animations {
 // Find more information on the wiki:
 // https://yalter.github.io/niri/Configuration:-Window-Rules
 
+workspace "development"
+workspace "planning"
+workspace "scratchpad"
+window-rule {
+    match app-id=r#"^com\.mitchellh\.ghostty$"#
+    open-on-workspace "development"
+}
+window-rule {
+    match app-id="ticktick"
+    open-on-workspace "planning"
+}
+window-rule {
+    match app-id="obsidian"
+    open-on-workspace "planning"
+}
+window-rule {
+    match app-id="firefox"
+    open-on-workspace "development"
+    default-column-width {}
+}
 // Work around WezTerm's initial configure bug
 // by setting an empty default-column-width.
 window-rule {
@@ -328,6 +349,14 @@ window-rule {
 window-rule {
     match app-id="org.mozilla.firefox"
     open-fullscreen false
+}
+
+window-rule {
+    match title="GeminiFloatingWindow"
+    open-floating true 
+    default-floating-position x=0.5 y=0.5 relative-to="top-left"
+    // default-window-height { proportion 0.5; } // 50% of screen height
+    default-column-width { proportion 0.66; } // 80% of screen widttrue
 }
 
 // Example: block out two password managers from screen capture.
@@ -362,6 +391,13 @@ binds {
 
     // Mod-Shift-/, which is usually the same as Mod-?,
     // shows a list of important hotkeys.
+
+    Mod+G {
+        spawn-sh "niri.scratchpad --title GeminiFloatingWindow --spawn 'ghostty --title=GeminiFloatingWindow --class=TestClass -e tmux new-session -A -s gemini -c ~/.floating-gemini gemini'";
+    }
+    Mod+Shift+G {
+        spawn-sh "grim -g \"$(slurp)\" ~/.floating-gemini/context.png && niri.scratchpad --title GeminiFloatingWindow --spawn 'ghostty --title=GeminiFloatingWindow --class=TestClass -e tmux new-session -A -s gemini -c ~/.floating-gemini gemini'";
+    }
     Mod+Shift+Slash { show-hotkey-overlay; }
 
     // Suggested binds for running programs: terminal, app launcher, screen locker.
@@ -412,14 +448,14 @@ binds {
     Mod+K     { focus-window-up; }
     Mod+L     { focus-column-right; }
 
-    Mod+Ctrl+Left  { move-column-left; }
-    Mod+Ctrl+Down  { move-window-down; }
-    Mod+Ctrl+Up    { move-window-up; }
-    Mod+Ctrl+Right { move-column-right; }
-    Mod+Ctrl+H     { move-column-left; }
-    Mod+Ctrl+J     { move-window-down; }
-    Mod+Ctrl+K     { move-window-up; }
-    Mod+Ctrl+L     { move-column-right; }
+    Mod+Shift+Left  { move-column-left; }
+    Mod+Shift+Down  { move-window-down; }
+    Mod+Shift+Up    { move-window-up; }
+    Mod+Shift+Right { move-column-right; }
+    Mod+Shift+H     { move-column-left; }
+    Mod+Shift+J     { move-window-down; }
+    Mod+Shift+K     { move-window-up; }
+    Mod+Shift+L     { move-column-right; }
 
     // Alternative commands that move across workspaces when reaching
     // the first or last window in a column.
@@ -433,14 +469,14 @@ binds {
     Mod+Ctrl+Home { move-column-to-first; }
     Mod+Ctrl+End  { move-column-to-last; }
 
-    Mod+Shift+Left  { focus-monitor-left; }
-    Mod+Shift+Down  { focus-monitor-down; }
-    Mod+Shift+Up    { focus-monitor-up; }
-    Mod+Shift+Right { focus-monitor-right; }
-    Mod+Shift+H     { focus-monitor-left; }
-    Mod+Shift+J     { focus-monitor-down; }
-    Mod+Shift+K     { focus-monitor-up; }
-    Mod+Shift+L     { focus-monitor-right; }
+    Mod+Ctrl+Left  { focus-monitor-left; }
+    Mod+Ctrl+Down  { focus-monitor-down; }
+    Mod+Ctrl+Up    { focus-monitor-up; }
+    Mod+Ctrl+Right { focus-monitor-right; }
+    Mod+Ctrl+H     { focus-monitor-left; }
+    Mod+Ctrl+J     { focus-monitor-down; }
+    Mod+Ctrl+K     { focus-monitor-up; }
+    Mod+Ctrl+L     { focus-monitor-right; }
 
     Mod+Shift+Ctrl+Left  { move-column-to-monitor-left; }
     Mod+Shift+Ctrl+Down  { move-column-to-monitor-down; }

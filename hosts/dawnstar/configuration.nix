@@ -8,65 +8,44 @@
   imports =
     [ # Include the results of the hardware scan.
       ../../modules/neovim/default.nix
-      # ../../modules/pbs-vm/default.nix
       ../../modules/git/default.nix
-      ../../modules/ghostty/default.nix
       ../../modules/apollo/default.nix
-      ../../modules/gpg-yubi-ssh/default.nix
-      ../../modules/xr/default.nix
+      ../../modules/ghostty/default.nix
       ../../modules/yazi/default.nix
       ../../modules/zsh/default.nix
       ../../modules/atuin/default.nix
-      ../../modules/desktop-env/niri/default.nix
-      ../../modules/desktop-env/hyprland/default.nix
-      # ../../modules/desktop-env/plasma/default.nix
-      ../../modules/steam/default.nix
+      ../../modules/gpg-yubi-ssh/default.nix
+      ../../modules/desktop-env/plasma/default.nix
       ./networking.nix
-      ./graphics.nix
-      ./packages.nix
-      ./drivers.nix
       ./hardware-configuration.nix
     ];
 
-  virtualisation.docker.enable = true;
-  virtualisation.docker.extraPackages = [ pkgs.docker-buildx ];
-  virtualisation.libvirtd = {
-    enable = true;
-    qemu = {
-      package = pkgs.qemu_kvm;
-      runAsRoot = true;
-      swtpm.enable = true;
-    };
-  };
-  environment.systemPackages = with pkgs; [
-    virt-manager
-    audacity
-  ];
-
   stylix.enable = true ;
   stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-frappe.yaml";
+  # for remote build and switch
+  security.sudo.wheelNeedsPassword = false;
 
-  # myservice.pbs-vm = {
+  virtualisation.docker.enable = true;
+  virtualisation.docker.extraPackages = [ pkgs.docker-buildx ];
+  # virtualisation.libvirtd = {
   #   enable = true;
-  #   isoUrl = "https://enterprise.proxmox.com/iso/proxmox-backup-server_4.0-1.iso";
-  #   isoName = "proxmox-backup-server_4.0-1.iso";
-  #   sha256 = "208607b250164863b5731a29dd89569a123e6f385c5ec0939a4942357bf731e2";
-  #   vmBridge = "pbsbr0";
+  #   qemu = {
+  #     package = pkgs.qemu_kvm;
+  #     runAsRoot = true;
+  #     swtpm.enable = true;
+  #   };
   # };
-
+  # environment.systemPackages = with pkgs; [
+  #   virt-manager
+  # ];
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  services.tailscale = {
-    enable = true;         # Enables tailscaled system service
-    useRoutingFeatures = "client";  # "none", "client", or "server"
-    openFirewall = true;   # Automatically open firewall for Tailscale
-  };
-
-
   # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
+
+
 
 
   apps.nvimPure = {
@@ -80,33 +59,13 @@
     setAsDefault = true;                  # optional
   };
 
-  fonts = {
-    enableDefaultPackages = true;
-    packages = with pkgs; [ 
-      nerd-fonts.victor-mono
-      ubuntu_font_family
-      liberation_ttf
-      # Persian Font
-      vazir-fonts
-    ];
-
-    fontconfig = {
-      defaultFonts = {
-        serif = [  "Liberation Serif" "Vazirmatn" ];
-        sansSerif = [ "Ubuntu" "Vazirmatn" ];
-        monospace = [ "Victor Mono" ];
-      };
-    };
-  };
-  
-
   # Set your time zone.
   time.timeZone = host.timezone;
   # Also apply the same mapping on virtual consoles (tty1, tty2, …)
   console.useXkbConfig = true;
 
   # Select internationalisation properties.
-  # i18n.defaultLocale = "en_US.UTF-8";
+  i18n.defaultLocale = "en_IN";
 
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "en_IN";
@@ -132,7 +91,6 @@
 
   # Install firefox.
   programs.firefox.enable = true;
-
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

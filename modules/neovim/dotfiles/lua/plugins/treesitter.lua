@@ -9,6 +9,9 @@ return {
     ensure_installed = {
       "lua",
       "vim",
+      "templ",
+      "html",
+      "css",
       -- add more arguments for adding more treesitter parsers
     },
   },

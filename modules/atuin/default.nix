@@ -7,6 +7,7 @@
   programs.zsh.interactiveShellInit = lib.mkAfter ''
     # Bind ctrl-r but not up arrow
     eval "$(atuin init zsh --disable-up-arrow)"
+    eval "$(atuin init bash --disable-up-arrow)"
   '';
   systemd.tmpfiles.rules = helper.mkTmpFileRules host.username ".config/atuin" ./dotfiles;
 }

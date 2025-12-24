@@ -46,6 +46,7 @@
     nixosConfigurations = {
       dragonfly = mkHost "dragonfly";
       zephyrus = mkHost "zephyrus";
+      dawnstar = mkHost "dawnstar";
     };
   };
 }

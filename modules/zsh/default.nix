@@ -21,6 +21,7 @@
       ll = "ls -l";
       edit = "sudo -e";
       update = "sudo nixos-rebuild switch --flake $HOME/nix-config#${host.hostname}";
+      remote-update = "sudo nixos-rebuild switch --flake $HOME/nix-config#dawnstar --target-host tanmay@dawnstar.local.lan --sudo --ask-sudo-password";
     };
 
     histSize = 10000;

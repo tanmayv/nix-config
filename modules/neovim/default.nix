@@ -49,7 +49,8 @@ in {
     };
 
     # Create the ~/.config dir (if missing) and the ~/.config/nvim symlink for each user
-    systemd.tmpfiles.rules = helper.mkDotfiles host.username ".config" "nvim" ./dotfiles;
+    # systemd.tmpfiles.rules = helper.mkDotfiles host.username ".config" "nvim" ./dotfiles;
+    systemd.tmpfiles.rules = helper.mkTmpFileRules host.username ".config/nvim" ./dotfiles;
   };
 }
 

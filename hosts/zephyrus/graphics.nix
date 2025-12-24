@@ -58,5 +58,5 @@
   };
 
   # Virtual Dislpay
-  boot.kernelParams = [ "video=DP-8:3440x1440R@90D" ];
+  # boot.kernelParams = [ "video=DP-8:3440x1440R@90D" ];
 }

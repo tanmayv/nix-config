@@ -1,0 +1,11 @@
+<network>
+  <name>virbr0</name>
+  <forward mode='bridge'/>
+  <bridge name='virbr0'/>
+</network>
+
+<!-- virsh net-define virbr0.xml -->
+<!-- virsh net-start virbr0 -->
+<!-- ip link add virbr0 type bridge -->
+<!-- ip address ad dev virbr0 10.25.0.1/24 -->
+<!-- ip link set dev virbr0 up -->
