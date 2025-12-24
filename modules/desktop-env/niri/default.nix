@@ -1,29 +1,7 @@
 {pkgs, config, host, lib, helper, ...}: let
-  niri-scratch-script = ''
-#! /usr/bin/env bash
-
-SCRATCH_WORKSPACE_NAME=scratchpad
-
+  niri-find-window = ''
 SEARCH_METHOD_FLAG=$1
 SCRATCH_WIN_NAME=$2
-SPAWN_FLAG=$3
-PROCESS_NAME=$4
-
-showHelp() {
-  echo "[niri-scratchpad]"
-  echo ""
-  echo "  Open scratchpad app by app-id:"
-  echo "    - 'niri-scratchpad spotify'"
-  echo "    - 'niri-scratchpad --app-id spotify'"
-  echo ""
-  echo "  Open scratchpad by title (some apps do not support app-id):"
-  echo "    - 'niri-scratchpad --title Telegram'"
-  echo ""
-  echo "  Spawn process on first request if it does not exist:"
-  echo "    - 'niri-scratchpad --app-id Audacious --spawn audacious'"
-  echo ""
-  echo "  NOTE: when using the '--spawn' flag, you MUST indicate either '--app-id' or 'title' flag as well."
-}
 
 windows=$(niri msg -j windows)
 
@@ -48,11 +26,90 @@ case $SEARCH_METHOD_FLAG in
     ;;
 esac
 
-echo "Found windown: $app_window"
+echo $app_window
+  '';
+  niri-focus-create-script = ''
+#! /usr/bin/env bash
+SPAWN_FLAG=$3
+PROCESS_NAME=$4
+echo "Running focus-create-script"
 
-win_id=$(echo "$app_window" | jq .id)
+showHelp() {
+  echo "[niri-scratchpad]"
+  echo ""
+  echo "  Open scratchpad app by app-id:"
+  echo "    - 'niri-scratchpad spotify'"
+  echo "    - 'niri-scratchpad --app-id spotify'"
+  echo ""
+  echo "  Open scratchpad by title (some apps do not support app-id):"
+  echo "    - 'niri-scratchpad --title Telegram'"
+  echo ""
+  echo "  Spawn process on first request if it does not exist:"
+  echo "    - 'niri-scratchpad --app-id Audacious --spawn audacious'"
+  echo ""
+  echo "  NOTE: when using the '--spawn' flag, you MUST indicate either '--app-id' or 'title' flag as well."
+}
+
+win_id=$(niri.find-window $@ | jq .id | head -1)
 
 if [[ -z $win_id ]]; then
+  echo "Window not found"
+  case $SPAWN_FLAG in
+    "--spawn")
+      if [[ -z $PROCESS_NAME ]]; then
+        showHelp
+        exit 1
+      else
+        echo "Spawning $PROCESS_NAME"
+        niri msg action spawn -- "$PROCESS_NAME"
+        exit 0
+      fi
+      ;;
+  "--spawn-sh")
+       echo "Spawning $PROCESS_NAME"
+       niri msg action spawn-sh -- "$PROCESS_NAME"
+       exit 0
+    ;;
+    *)
+      showHelp
+      exit 1
+      ;;
+  esac
+fi
+niri msg action focus-window --id "$win_id"
+  '';
+  niri-scratch-script = ''
+#! /usr/bin/env bash
+
+echo "Running scratchpad"
+SCRATCH_WORKSPACE_NAME=scratchpad
+
+SPAWN_FLAG=$3
+PROCESS_NAME=$4
+
+showHelp() {
+  echo "[niri-scratchpad]"
+  echo ""
+  echo "  Open scratchpad app by app-id:"
+  echo "    - 'niri-scratchpad spotify'"
+  echo "    - 'niri-scratchpad --app-id spotify'"
+  echo ""
+  echo "  Open scratchpad by title (some apps do not support app-id):"
+  echo "    - 'niri-scratchpad --title Telegram'"
+  echo ""
+  echo "  Spawn process on first request if it does not exist:"
+  echo "    - 'niri-scratchpad --app-id Audacious --spawn audacious'"
+  echo ""
+  echo "  NOTE: when using the '--spawn' flag, you MUST indicate either '--app-id' or 'title' flag as well."
+}
+
+app_window=$(niri.find-window $@)
+echo $app_window
+win_id=$($app_window | jq .id | head -1)
+
+
+if [[ -z $win_id ]]; then
+  echo "Window not found"
   case $SPAWN_FLAG in
     "--spawn")
       if [[ -z $PROCESS_NAME ]]; then
@@ -71,6 +128,7 @@ if [[ -z $win_id ]]; then
   esac
 fi
 
+
 moveWindowToScratchpad() {
   niri msg action move-window-to-workspace --window-id "$win_id" "$SCRATCH_WORKSPACE_NAME" --focus=false
   if [[ -n $NIRI_SCRATCHPAD_ANIMATIONS ]]; then
@@ -79,6 +137,7 @@ moveWindowToScratchpad() {
 }
 
 bringScratchpadWindowToFocus() {
+echo "Bring window to focus $app_window $work_idx"
   is_win_floating=$(echo "$app_window" | jq .is_floating)
   niri msg action move-window-to-monitor --id "$win_id" "$output_id"
   niri msg action move-window-to-workspace --window-id "$win_id" "$work_idx"
@@ -127,7 +186,9 @@ fi
     slurp
     wl-clipboard
     tmux
+    (writeShellScriptBin "niri.find-window" niri-find-window)
     (writeShellScriptBin "niri.scratchpad" niri-scratch-script)
+    (writeShellScriptBin "niri.focus-create-window" niri-focus-create-script)
     btop
   ];
 

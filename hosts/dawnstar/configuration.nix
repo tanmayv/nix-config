@@ -12,6 +12,7 @@
       ../../modules/apollo/default.nix
       ../../modules/ghostty/default.nix
       ../../modules/yazi/default.nix
+      ../../modules/tmux/default.nix
       ../../modules/zsh/default.nix
       ../../modules/atuin/default.nix
       ../../modules/gpg-yubi-ssh/default.nix

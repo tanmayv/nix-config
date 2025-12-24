@@ -16,6 +16,7 @@
       ../../modules/xr/default.nix
       ../../modules/yazi/default.nix
       ../../modules/zsh/default.nix
+      ../../modules/tmux/default.nix
       ../../modules/atuin/default.nix
       ../../modules/desktop-env/niri/default.nix
       ../../modules/desktop-env/hyprland/default.nix
