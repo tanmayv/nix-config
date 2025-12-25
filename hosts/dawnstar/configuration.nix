@@ -16,7 +16,7 @@
       ../../modules/zsh/default.nix
       ../../modules/atuin/default.nix
       ../../modules/gpg-yubi-ssh/default.nix
-      ../../modules/desktop-env/plasma/default.nix
+      ../../modules/desktop-env/niri/default.nix
       ./networking.nix
       ./hardware-configuration.nix
     ];

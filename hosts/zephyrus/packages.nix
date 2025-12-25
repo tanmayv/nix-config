@@ -4,6 +4,7 @@
     codex
     gemini-cli
     tmux
+    lazygit
     ticktick
   ];
 }

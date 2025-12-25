@@ -328,7 +328,7 @@ if [[ ! -z $session_cmd ]]; then
 elif [[ ! -z $user_selected ]]; then
     selected="$user_selected"
 else
-    selected=$(find_dirs | fzf)
+    selected=$(find_dirs | fzf --tmux)
 fi
 
 if [[ -z $selected ]]; then
@@ -367,7 +367,7 @@ switch_to "$selected_name"
       fi
  
       # Select a session with fzf and attach
-      local choice=$(echo "$sessions" | fzf --query="$1" --select-1 --exit-0)
+      local choice=$(echo "$sessions" | fzf --tmux --query="$1" --select-1 --exit-0)
       if [ -n "$choice" ]; then
         tmux attach-session -t "$choice"
       fi
