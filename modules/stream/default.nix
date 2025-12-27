@@ -34,7 +34,6 @@
       obs-retro-effects
       obs-advanced-masks
       obs-aitum-multistream
-      obs-vertical-canvas
     ];
   };
 }

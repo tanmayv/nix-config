@@ -106,7 +106,7 @@
     enableDefaultPackages = true;
     packages = with pkgs; [ 
       nerd-fonts.victor-mono
-      ubuntu_font_family
+      ubuntu-classic
       liberation_ttf
       # Persian Font
       vazir-fonts
