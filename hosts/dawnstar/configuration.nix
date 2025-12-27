@@ -14,10 +14,12 @@
       ../../modules/yazi/default.nix
       ../../modules/tmux/default.nix
       ../../modules/zsh/default.nix
+      ../../modules/stream/default.nix
       ../../modules/atuin/default.nix
       ../../modules/gpg-yubi-ssh/default.nix
       ../../modules/desktop-env/niri/default.nix
       ./networking.nix
+      ./packages.nix
       ./hardware-configuration.nix
     ];
 
@@ -28,18 +30,24 @@
 
   virtualisation.docker.enable = true;
   virtualisation.docker.extraPackages = [ pkgs.docker-buildx ];
-  # virtualisation.libvirtd = {
-  #   enable = true;
-  #   qemu = {
-  #     package = pkgs.qemu_kvm;
-  #     runAsRoot = true;
-  #     swtpm.enable = true;
-  #   };
-  # };
-  # environment.systemPackages = with pkgs; [
-  #   virt-manager
-  # ];
-  # Bootloader.
+  fonts = {
+    enableDefaultPackages = true;
+    packages = with pkgs; [ 
+      nerd-fonts.victor-mono
+      ubuntu_font_family
+      liberation_ttf
+      # Persian Font
+      vazir-fonts
+    ];
+
+    fontconfig = {
+      defaultFonts = {
+        serif = [  "Liberation Serif" "Vazirmatn" ];
+        sansSerif = [ "Ubuntu" "Vazirmatn" ];
+        monospace = [ "Victor Mono" ];
+      };
+    };
+  };
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 

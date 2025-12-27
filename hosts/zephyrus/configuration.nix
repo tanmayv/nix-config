@@ -16,6 +16,7 @@
       ../../modules/xr/default.nix
       ../../modules/yazi/default.nix
       ../../modules/zsh/default.nix
+      ../../modules/stream/default.nix
       ../../modules/tmux/default.nix
       ../../modules/atuin/default.nix
       ../../modules/desktop-env/niri/default.nix
@@ -39,10 +40,30 @@
       swtpm.enable = true;
     };
   };
+
+  # 2. Install the necessary packages
+  services.usbmuxd.enable = true;
   environment.systemPackages = with pkgs; [
     virt-manager
     audacity
+    libgphoto2
+    libimobiledevice # Tools for interacting with iOS
+    droidcam         # The DroidCam desktop client
+    gphoto2
+    gphoto2fs
+    ffmpeg
+    v4l-utils         # Adds v4l2-ctl
   ];
+  boot.kernelModules = [ "v4l2loopback" ];
+  
+  # Ensure the module package is available for your kernel
+  boot.extraModulePackages = [ config.boot.kernelPackages.v4l2loopback ];
+
+  # Configure the module (exclusive_caps makes it look like a real webcam)
+  boot.extraModprobeConfig = ''
+    options v4l2loopback exclusive_caps=1 card_label="Canon 6D Webcam"
+  '';
+  programs.gphoto2.enable = true;
 
   stylix.enable = true ;
   stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-frappe.yaml";
@@ -125,7 +146,7 @@
   users.users.tanmay = {
     isNormalUser = true;
     description = "Tanmay";
-    extraGroups = [ "wheel" "libvirtd" "docker"];
+    extraGroups = [ "wheel" "libvirtd" "docker" "camera" "video"];
     packages = with pkgs; [
       
     ];

@@ -4,7 +4,9 @@
     codex
     gemini-cli
     tmux
+    gimp
     lazygit
+    spotify
     ticktick
   ];
 }

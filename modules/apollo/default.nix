@@ -43,14 +43,43 @@ hdmiHotplugScript = pkgs.writeShellScript "hdmi-a-1-hotplug" ''
         ;;
     esac
   '';
+  edidFileName = "samsung-q800t-hdmi2.1"; 
+  videoPort = "HDMI-A-1";
 in with lib; {
-  # services.sunshine = {
-  #   enable = true;
-  #   autoStart = false;
-  #   capSysAdmin = true;
-  #   openFirewall = true;
-  #
-  # };
+# # 1. Provide the EDID file to the kernel firmware search path
+#   hardware.firmware = [
+#     (pkgs.runCommand "custom-edid" {} ''
+#       mkdir -p $out/lib/firmware/edid
+#       cp ${./edid-files + "/${edidFileName}"} $out/lib/firmware/edid/${edidFileName}
+#     '')
+#   ];
+#
+# # {
+# #   boot.kernelParams = [ "drm.edid_firmware=DP-2:edid/edid.bin" "video=DP-2:e" ];
+# #   hardware.firmware = [
+# #   (
+# #     pkgs.runCommand "edid.bin" { } ''
+# #       mkdir -p $out/lib/firmware/edid
+# #       cp ${../custom-files/edid/edid.bin} $out/lib/firmware/edid/edid.bin
+# #     ''
+# #   )];
+# # }
+# # 3. Configure Kernel Parameters
+#   boot.kernelParams = [
+#     "drm.edid_firmware=${videoPort}:edid/${edidFileName}"
+#     "video=${videoPort}:e"
+#     "fbcon=map:0"
+#   ];
+#   boot = {
+#     kernelPatches = [ {
+#       name = "edid-loader-fix-config";
+#       patch = null;
+#       extraConfig = ''
+#         FW_LOADER y
+#         '';
+#     } ];	
+#   };
+#
 
   #  hardware.graphics = {
   #   enable = true;

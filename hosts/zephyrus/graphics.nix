@@ -30,7 +30,7 @@
     # Enable this if you have graphical corruption issues or application crashes after waking
     # up from sleep. This fixes it by saving the entire VRAM memory to /tmp/ instead 
     # of just the bare essentials.
-    powerManagement.enable = false;
+    powerManagement.enable = true;
 
     # Fine-grained power management. Turns off GPU when not in use.
     # Experimental and only works on modern Nvidia GPUs (Turing or newer).
@@ -43,6 +43,7 @@
     # https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus 
     # Only available from driver 515.43.04+
     open = true;
+    dynamicBoost.enable = true;
 
     # Enable the Nvidia settings menu,
 	  # accessible via `nvidia-settings`.
@@ -57,6 +58,4 @@
     __GLX_VENDOR_LIBRARY_NAME = "nvidia";
   };
 
-  # Virtual Dislpay
-  # boot.kernelParams = [ "video=DP-8:3440x1440R@90D" ];
 }

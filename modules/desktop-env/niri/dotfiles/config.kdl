@@ -6,8 +6,7 @@
 spawn-at-startup "mako"
 spawn-at-startup "swww-daemon"
 spawn-at-startup "waybar"
-spawn-at-startup "ticktick"
-spawn-at-startup "obsidian"
+spawn-at-startup "firefox"
 spawn-sh-at-startup "brightnessctl --device='asus::kbd_backlight' set 2"
 
 // Input device configuration.
@@ -300,7 +299,7 @@ animations {
     // off
 
     // Slow down all animations by this factor. Values below 1 speed them up instead.
-    // slowdown 3.0
+    slowdown 0.5
 }
 
 // Window rules let you adjust behavior for individual windows.
@@ -310,6 +309,49 @@ animations {
 workspace "development"
 workspace "planning"
 workspace "scratchpad"
+workspace "aesthetic" {
+    // Layout config overrides just for this named workspace.
+    layout {
+        gaps 32
+
+        struts {
+            left 64
+            right 64
+            bottom 64
+            top 64
+        }
+
+        border {
+            on
+            width 4
+        }
+
+        // ...any other setting.
+    }
+}
+
+window-rule {
+    match is-window-cast-target=true
+
+    focus-ring {
+        active-color "#f38ba8"
+        inactive-color "#7d0d2d"
+    }
+
+    border {
+        inactive-color "#7d0d2d"
+    }
+
+    shadow {
+        color "#7d0d2d70"
+    }
+
+    tab-indicator {
+        active-color "#f38ba8"
+        inactive-color "#7d0d2d"
+    }
+}
+
 window-rule {
     match app-id=r#"^com\.mitchellh\.ghostty$"#
     open-on-workspace "development"
@@ -326,6 +368,16 @@ window-rule {
     match app-id="firefox"
     open-on-workspace "development"
     default-column-width {}
+}
+window-rule {
+    match app-id="com.obsproject.Studio"
+    open-on-workspace "streaming"
+    default-column-width { proportion 1.0; }
+}
+window-rule {
+    match app-id="com.github.wwmm.easyeffects"
+    open-on-workspace "streaming"
+    default-column-width { proportion 0.5; }
 }
 // Work around WezTerm's initial configure bug
 // by setting an empty default-column-width.
@@ -401,10 +453,10 @@ binds {
         spawn-sh "grim -g \"$(slurp)\" ~/.floating-gemini/context.png && niri.scratchpad --title GeminiFloatingWindow --spawn 'ghostty --title=GeminiFloatingWindow --class=TestClass -e tmux new-session -A -s gemini -c ~/.floating-gemini gemini'";
     }
     Mod+T {
-        spawn-sh "niri.focus-create-window --title MainTerminalWindow --spawn-sh 'ghostty --title=MainTerminalWindow -e tmux new-session -A -s main-session'";
+        spawn-sh "niri.focus-create-window --title MainTerminalWindow --spawn-sh 'ghostty --title=MainTerminalWindow -e tmux new-session -A -s main-session' && niri msg action set-dynamic-cast-window";
     }
     Mod+B {
-        spawn-sh "niri.focus-create-window --app-id firefox --spawn firefox";
+        spawn-sh "niri.focus-create-window --app-id firefox --spawn firefox && niri msg action set-dynamic-cast-window";
     }
     Mod+N {
         spawn-sh "niri.focus-create-window --app-id obsidian --spawn obsidian";
@@ -415,9 +467,17 @@ binds {
     Mod+W {
         spawn-sh "niri.focus-create-window --title WifiSettings --spawn-sh 'ghostty --title=WifiSettings -e nmtui'";
     }
+    Mod+S {
+        spawn-sh "niri.focus-create-window --app-id com.obsproject.Studio --spawn 'obs'";
+    }
+    Mod+M {
+        spawn-sh "niri.focus-create-window --app-id spotify --spawn 'spotify'";
+    }
     Mod+Shift+T hotkey-overlay-title="Open a Terminal: ghostty" { spawn "ghostty"; }
 
     Mod+Shift+Slash { show-hotkey-overlay; }
+
+    Mod+Ctrl+S { set-dynamic-cast-window; }
 
     // Suggested binds for running programs: terminal, app launcher, screen locker.
     Mod+D hotkey-overlay-title="Run an Application: rofi" { spawn-sh "rofi -show drun -config $HOME/.config/rofi/appdrawer.rasi"; }
@@ -630,12 +690,12 @@ binds {
     // * adjust width as a percentage of screen width: "-10%" or "+10%"
     // Pixel sizes use logical, or scaled, pixels. I.e. on an output with scale 2.0,
     // set-column-width "100" will make the column occupy 200 physical screen pixels.
-    Mod+Minus { set-column-width "-10%"; }
-    Mod+Equal { set-column-width "+10%"; }
+    Mod+Minus { set-column-width "-2%"; }
+    Mod+Equal { set-column-width "+2%"; }
 
     // Finer height adjustments when in column with other windows.
-    Mod+Shift+Minus { set-window-height "-10%"; }
-    Mod+Shift+Equal { set-window-height "+10%"; }
+    Mod+Shift+Minus { set-window-height "-2%"; }
+    Mod+Shift+Equal { set-window-height "+2%"; }
 
     // Move the focused window between the floating and the tiling layout.
     Mod+V       { toggle-window-floating; }
