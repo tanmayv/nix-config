@@ -5,6 +5,7 @@
     vlc
     easyeffects
     kitty
+    qutebrowser
     bat
     taskwarrior3
     taskwarrior-tui

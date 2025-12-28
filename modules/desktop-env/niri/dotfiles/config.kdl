@@ -6,7 +6,6 @@
 spawn-at-startup "mako"
 spawn-at-startup "swww-daemon"
 spawn-at-startup "waybar"
-spawn-at-startup "firefox"
 spawn-sh-at-startup "brightnessctl --device='asus::kbd_backlight' set 2"
 
 // Input device configuration.
@@ -306,31 +305,30 @@ animations {
 // Find more information on the wiki:
 // https://yalter.github.io/niri/Configuration:-Window-Rules
 
-workspace "development"
-workspace "planning"
-workspace "scratchpad"
+workspace "default"
+workspace "development" {
+    layout {
+        default-column-width { fixed 1600; } 
+    }
+}
 workspace "streaming"
+workspace "scratchpad"
+
 
 window-rule {
     match is-window-cast-target=true
 
     focus-ring {
-        active-color "#f38ba8"
-        inactive-color "#7d0d2d"
-    }
-
-    border {
-        inactive-color "#7d0d2d"
+        on
+        width 4
+        inactive-color "#ffc87f"
+        active-color "#7d0d2d"
     }
 
     shadow {
         color "#7d0d2d70"
     }
 
-    tab-indicator {
-        active-color "#f38ba8"
-        inactive-color "#7d0d2d"
-    }
 }
 
 window-rule {
@@ -339,11 +337,11 @@ window-rule {
 }
 window-rule {
     match app-id="ticktick"
-    open-on-workspace "planning"
+    open-on-workspace "default"
 }
 window-rule {
     match app-id="obsidian"
-    open-on-workspace "planning"
+    open-on-workspace "default"
 }
 window-rule {
     match app-id="firefox"
@@ -386,12 +384,11 @@ window-rule {
 }
 
 window-rule {
-    match title="GeminiFloatingWindow"
+    // match title="GeminiFloatingWindow" app-id=r#"qutebrowser"#
+    match app-id=r#"qutebrowser$"#
     open-floating true 
     default-floating-position x=0.5 y=0.5 relative-to="top-left"
-    opacity 0.8
-    // default-window-height { proportion 0.5; } // 50% of screen height
-    default-column-width { proportion 0.66; } // 80% of screen widttrue
+    opacity 0.9
 }
 
 // Example: block out two password managers from screen capture.
@@ -408,7 +405,7 @@ window-rule {
 
 // Example: enable rounded corners for all windows.
 // (This example rule is commented out with a "/-" in front.)
-/-window-rule {
+window-rule {
     geometry-corner-radius 12
     clip-to-geometry true
 }
@@ -427,17 +424,20 @@ binds {
     // Mod-Shift-/, which is usually the same as Mod-?,
     // shows a list of important hotkeys.
 
+    // Mod+G {
+    //     spawn-sh "niri.scratchpad --title GeminiFloatingWindow --spawn 'ghostty --title=GeminiFloatingWindow --class=TestClass -e tmux new-session -A -s gemini -c ~/.floating-gemini gemini'";
+    // }
     Mod+G {
-        spawn-sh "niri.scratchpad --title GeminiFloatingWindow --spawn 'ghostty --title=GeminiFloatingWindow --class=TestClass -e tmux new-session -A -s gemini -c ~/.floating-gemini gemini'";
+        spawn-sh "niri.scratchpad --app-id 'org.qutebrowser.qutebrowser' --spawn 'qutebrowser https://gemini.google.com' && niri msg action set-dynamic-cast-window";
     }
     Mod+Shift+G {
-        spawn-sh "grim -g \"$(slurp)\" ~/.floating-gemini/context.png && niri.scratchpad --title GeminiFloatingWindow --spawn 'ghostty --title=GeminiFloatingWindow --class=TestClass -e tmux new-session -A -s gemini -c ~/.floating-gemini gemini'";
+        spawn-sh "grim -g \"$(slurp)\" - | wl-copy && niri.scratchpad --app-id 'org.qutebrowser.qutebrowser' --spawn 'qutebrowser https://gemini.google.com' && niri msg action set-dynamic-cast-window";
     }
     Mod+T {
         spawn-sh "niri.focus-create-window --title MainTerminalWindow --spawn-sh 'ghostty --title=MainTerminalWindow -e tmux new-session -A -s main-session' && niri msg action set-dynamic-cast-window";
     }
     Mod+B {
-        spawn-sh "niri.focus-create-window --app-id firefox --spawn firefox && niri msg action set-dynamic-cast-window";
+        spawn-sh "niri.focus-create-window --app-id firefox --spawn-sh 'firefox --kiosk' && niri msg action set-dynamic-cast-window";
     }
     Mod+N {
         spawn-sh "niri.focus-create-window --app-id obsidian --spawn obsidian";

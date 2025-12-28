@@ -8,5 +8,6 @@
     lazygit
     spotify
     ticktick
+    mpv
   ];
 }

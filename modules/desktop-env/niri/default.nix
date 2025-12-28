@@ -167,7 +167,12 @@ fi
   '';
   in
 {
-  programs.niri.enable = true;
+  
+  programs.niri = {
+    enable = true;
+    package = pkgs.niri;
+  };
+
   environment.systemPackages = with pkgs; [
     imagemagick
     rofi
