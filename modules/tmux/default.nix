@@ -373,5 +373,6 @@ switch_to "$selected_name"
     fi
   '';
 
-  systemd.tmpfiles.rules = (helper.mkTmpFileRules host.username "" ./dotfiles1) ++ (helper.mkTmpFileRules host.username ".config" ./dotfiles2);
-}
+  
+  systemd.tmpfiles.rules = (helper.mkTmpFileRules host.username "" ./dotfiles1);
+  }
