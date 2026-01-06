@@ -18,6 +18,7 @@
       ../../modules/zsh/default.nix
       ../../modules/stream/default.nix
       ../../modules/tmux/default.nix
+      ../../modules/opencode/default.nix
       ../../modules/atuin/default.nix
       ../../modules/desktop-env/niri/default.nix
       ../../modules/desktop-env/hyprland/default.nix
@@ -30,7 +31,12 @@
       ./hardware-configuration.nix
     ];
 
+  # 2. Enable udev rules for QMK-compatible keyboards
+  # This allows non-root users to flash firmware
+  hardware.keyboard.qmk.enable = true;
   virtualisation.docker.enable = true;
+  services.flatpak.enable = true;
+  
   virtualisation.docker.extraPackages = [ pkgs.docker-buildx ];
   virtualisation.libvirtd = {
     enable = true;
@@ -40,13 +46,14 @@
       swtpm.enable = true;
     };
   };
-
   # 2. Install the necessary packages
   services.usbmuxd.enable = true;
   environment.systemPackages = with pkgs; [
     virt-manager
     audacity
     libgphoto2
+    qmk
+    dos2unix # required by qmk
     libimobiledevice # Tools for interacting with iOS
     droidcam         # The DroidCam desktop client
     gphoto2
@@ -75,6 +82,14 @@
   #   sha256 = "208607b250164863b5731a29dd89569a123e6f385c5ec0939a4942357bf731e2";
   #   vmBridge = "pbsbr0";
   # };
+
+  # Invert X Axis for Logitech Unifying Receiver mouse
+  environment.etc."libinput/local-overrides.quirks".text = ''
+    [Invert X Axis Mouse]
+    MatchName=Logitech USB Receiver
+    AttrEventCodeKeyboard=KEY_XF86AudioPlay;KEY_XF86AudioStop
+    AttrCalibrationMatrix=-1 0 1 0 1 0
+  '';
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;

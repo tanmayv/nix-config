@@ -14,7 +14,6 @@
       ../../modules/yazi/default.nix
       ../../modules/tmux/default.nix
       ../../modules/zsh/default.nix
-      ../../modules/stream/default.nix
       ../../modules/atuin/default.nix
       ../../modules/gpg-yubi-ssh/default.nix
       ../../modules/desktop-env/niri/default.nix

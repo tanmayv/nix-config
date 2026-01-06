@@ -11,7 +11,7 @@
       ../../modules/pbs-vm/default.nix
       ../../modules/git/default.nix
       ../../modules/ghostty/default.nix
-      ../../modules/sunshine/default.nix
+      ../../modules/apollo/default.nix
       ../../modules/gpg-yubi-ssh/default.nix
       ../../modules/desktop-env/plasma/default.nix
       ../../modules/desktop-env/hyprland/default.nix

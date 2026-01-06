@@ -21,15 +21,21 @@
   };
 
   outputs = { self, nixpkgs, sops-nix, niri, hyprland, apollo-flake, ... }@inputs:
-  let 
+  let
+    overlays = [
+      (final: prev: {
+        librepods = prev.callPackage ./pkgs/librepods {};
+      })
+    ];
     mkHost = name: let
       host =  import ./hosts/${name}/host.nix;
       helper =  import ./modules/core/lib/helper/default.nix { lib = nixpkgs.lib; };
     in 
     nixpkgs.lib.nixosSystem {
       system = host.system;
-      specialArgs = { inherit host; inherit helper; inherit hyprland; inherit apollo-flake; }; # Make host 
+      specialArgs = { inherit host; inherit helper; inherit hyprland; inherit apollo-flake; inherit nixpkgs; }; # Make host 
       modules = [
+          { nixpkgs.overlays = overlays; }
           (inputs.apollo-flake.nixosModules.${host.system}.default)
           ({pkgs, ...}: {
             services.apollo.package = apollo-flake.packages.${pkgs.system}.default;

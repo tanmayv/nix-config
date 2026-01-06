@@ -354,7 +354,6 @@ fi
 switch_to "$selected_name"
     '')
   ];
-  systemd.tmpfiles.rules = helper.mkTmpFileRules host.username "" ./dotfiles;
   programs.zsh.interactiveShellInit = lib.mkAfter ''
     if [ -z "$TMUX" ]; then
       # Get session list, excluding the colon at the end of the name
@@ -373,4 +372,6 @@ switch_to "$selected_name"
       fi
     fi
   '';
+
+  systemd.tmpfiles.rules = (helper.mkTmpFileRules host.username "" ./dotfiles1) ++ (helper.mkTmpFileRules host.username ".config" ./dotfiles2);
 }

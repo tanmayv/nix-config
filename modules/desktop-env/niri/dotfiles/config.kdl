@@ -43,15 +43,16 @@ input {
 
     mouse {
         // off
-        // natural-scroll
+        natural-scroll
         // accel-speed 0.2
         // accel-profile "flat"
         // scroll-method "no-scroll"
+        scroll-factor horizontal=-1.0 vertical=-1.0
     }
 
     trackpoint {
         // off
-        // natural-scroll
+        natural-scroll
         // accel-speed 0.2
         // accel-profile "flat"
         // scroll-method "on-button-down"
@@ -193,7 +194,7 @@ layout {
         // If you enable the border, you probably want to disable the focus ring.
         off
 
-        width 4
+        width 2
         active-color "#ffc87f"
         inactive-color "#505050"
 
@@ -437,7 +438,10 @@ binds {
         spawn-sh "niri.focus-create-window --title MainTerminalWindow --spawn-sh 'ghostty --title=MainTerminalWindow -e tmux new-session -A -s main-session' && niri msg action set-dynamic-cast-window";
     }
     Mod+B {
-        spawn-sh "niri.focus-create-window --app-id firefox --spawn-sh 'firefox --kiosk' && niri msg action set-dynamic-cast-window";
+        spawn-sh "niri.focus-create-window --app-id firefox --spawn firefox && niri msg action set-dynamic-cast-window";
+    }
+    Mod+Shift+Ctrl+Super+B {
+        spawn-sh "niri.focus-create-window --app-id firefox --spawn firefox && niri msg action set-dynamic-cast-window";
     }
     Mod+N {
         spawn-sh "niri.focus-create-window --app-id obsidian --spawn obsidian";
@@ -473,9 +477,9 @@ binds {
     // Example volume keys mappings for PipeWire & WirePlumber.
     // The allow-when-locked=true property makes them work even when the session is locked.
     // Using spawn-sh allows to pass multiple arguments together with the command.
-    XF86AudioRaiseVolume allow-when-locked=true { spawn "volumeosd" "up"; }
-    XF86AudioLowerVolume allow-when-locked=true { spawn "volumeosd" "down"; }
-    XF86AudioMute        allow-when-locked=true { spawn "volumeosd" "mute"; }
+    XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 0.05+"; }
+    XF86AudioLowerVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05-"; }
+    XF86AudioMute        allow-when-locked=true { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"; }
     XF86AudioMicMute     allow-when-locked=true { spawn "wpctl" "set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle"; }
 
     // Example media keys mapping using playerctl.
