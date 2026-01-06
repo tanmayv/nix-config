@@ -1,6 +1,7 @@
 { pkgs, helper, host, ... }: 
 let aliases = {
       ll = "ls -l";
+      tree = "eza --icons --tree";
       ls = "eza --icons";
       edit = "sudo -e";
       update = "sudo nixos-rebuild switch --flake $HOME/nix-config#${host.hostname}";
