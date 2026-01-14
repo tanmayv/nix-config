@@ -24,5 +24,6 @@
     ticktick
     mpv
     freecad
+    ksnip
   ];
 }

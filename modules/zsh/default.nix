@@ -38,13 +38,7 @@ in
     syntaxHighlighting.enable = true;
 
     shellAliases = aliases;
-    histSize = 10000;
-    histFile = "$HOME/.zsh_history";
-    setOptions = [
-      "HIST_IGNORE_ALL_DUPS"
-    ];
   };
-
 
   programs.zoxide = {
     enable = true;

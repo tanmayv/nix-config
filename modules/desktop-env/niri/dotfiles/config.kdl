@@ -703,6 +703,7 @@ binds {
     // Ctrl+Print { screenshot-screen; }
     Alt+Print { screenshot-window; }
     Mod+Shift+S { screenshot show-pointer=false; }
+    Mod+Shift+W { spawn-sh "find ~/Pictures/Screenshots/ -maxdepth 1 -type f -printf '%T@ %p\n' | sort -n | tail -1 | cut -f2- -d\" \" | xargs -I {} ksnip -e \"{}\""; } 
 
     // Applications such as remote-desktop clients and software KVM switches may
     // request that niri stops processing the keyboard shortcuts defined here
