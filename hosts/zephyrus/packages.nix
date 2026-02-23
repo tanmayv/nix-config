@@ -24,6 +24,7 @@
     ticktick
     mpv
     freecad
+    davinci-resolve
     ksnip
   ];
 }

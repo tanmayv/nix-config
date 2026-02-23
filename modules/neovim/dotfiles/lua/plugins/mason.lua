@@ -1,4 +1,4 @@
-if true then return {} end -- WARN: REMOVE THIS LINE TO ACTIVATE THIS FILE
+
 
 -- Customize Mason
 
@@ -13,6 +13,7 @@ return {
       ensure_installed = {
         -- install language servers
         "lua-language-server",
+        "templ",
 
         -- install formatters
         "stylua",

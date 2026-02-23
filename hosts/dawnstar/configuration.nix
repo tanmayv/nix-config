@@ -53,9 +53,6 @@
   # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
-
-
-
   apps.nvimPure = {
     enable = true;
     extraPackages = with pkgs; [ ripgrep fd ];
