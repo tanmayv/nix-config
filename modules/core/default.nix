@@ -36,6 +36,9 @@
       "API_KEYS/GEMINI_API_KEY" = {
         owner = "${host.username}";
       };
+     "nas_credentials" = {
+      owner = "${host.username}";
+    };
     };
   };
   # Create a helper file that exports the variable
@@ -52,4 +55,15 @@
   programs.zsh.interactiveShellInit = ''
     export GEMINI_API_KEY=$(cat ${config.sops.secrets."API_KEYS/GEMINI_API_KEY".path})
   '';
+
+  # Updated FileSystem mount
+  fileSystems."/mnt/media" = {
+    device = "//nas.local.lan/media";
+    fsType = "cifs";
+    options = let
+      automount_opts = "x-systemd.automount,noauto,x-systemd.idle-timeout=60,user";
+    in [
+      "${automount_opts},credentials=${config.sops.secrets."nas_credentials".path},uid=1000,gid=1005"
+    ];
+  };
 }
