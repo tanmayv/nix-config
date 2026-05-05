@@ -17,6 +17,7 @@
       ../../modules/atuin/default.nix
       ../../modules/gpg-yubi-ssh/default.nix
       ../../modules/desktop-env/niri/default.nix
+      ../../modules/beads/default.nix
       ./networking.nix
       ./packages.nix
       ./hardware-configuration.nix
@@ -68,6 +69,10 @@
   time.timeZone = host.timezone;
   # Also apply the same mapping on virtual consoles (tty1, tty2, …)
   console.useXkbConfig = true;
+  services.xserver.xkb = {
+    layout = "us";
+    options = "caps:ctrl_modifier";
+  };
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_IN";

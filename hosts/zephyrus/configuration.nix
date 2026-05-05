@@ -24,6 +24,7 @@
       ../../modules/desktop-env/hyprland/default.nix
       # ../../modules/desktop-env/plasma/default.nix
       ../../modules/steam/default.nix
+      ../../modules/beads/default.nix
       ./networking.nix
       ./graphics.nix
       ./packages.nix
@@ -36,6 +37,10 @@
   hardware.keyboard.qmk.enable = true;
   virtualisation.docker.enable = true;
   services.flatpak.enable = true;
+  programs.pi.coding-agent = {
+    enable = true;
+  };
+
   
   virtualisation.docker.extraPackages = [ pkgs.docker-buildx ];
   virtualisation.libvirtd = {
@@ -139,8 +144,10 @@
 
   # Set your time zone.
   time.timeZone = host.timezone;
-  # Also apply the same mapping on virtual consoles (tty1, tty2, …)
-  console.useXkbConfig = true;
+  services.xserver.xkb = {
+    layout = "us";
+    options = "caps:ctrl_modifier";
+  };
 
   # Select internationalisation properties.
   # i18n.defaultLocale = "en_US.UTF-8";

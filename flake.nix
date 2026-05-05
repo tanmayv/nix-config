@@ -19,6 +19,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     apollo-flake.url = "github:nil-andreas/apollo-flake";
+    pi-mono.url = "github:lukasl-dev/pi-mono.nix";
     apollo-flake.inputs.nixpkgs.follows = "nixpkgs";
   };
 
@@ -45,6 +46,7 @@
           sops-nix.nixosModules.sops
           inputs.stylix.nixosModules.stylix
           niri.nixosModules.niri
+          inputs.pi-mono.nixosModules.default
           ./modules/core
           ./hosts/${name}/hardware-configuration.nix
           ./hosts/${name}/configuration.nix

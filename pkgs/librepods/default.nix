@@ -9,7 +9,10 @@
   wayland,
   libGL,
   dbus,
-  xorg,
+  libxcursor,
+  libxrandr,
+  libxi,
+  libx11,
   lib,
 }:
 
@@ -42,10 +45,10 @@ rustPlatform.buildRustPackage (finalAttrs: {
     libGL
     wayland
     libxkbcommon
-    xorg.libXcursor
-    xorg.libXrandr
-    xorg.libXi
-    xorg.libX11
+    libxcursor
+    libxrandr
+    libxi
+    libx11
   ];
 
   # Allows Iced access to the libraries it needs.

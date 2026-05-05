@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mastering Your Pi Agent</title>
+    <style>
+        body { font-family: sans-serif; background: #222; color: #eee; margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+        .slides { width: 80%; height: 80%; position: relative; }
+        .slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: #333; padding: 2rem; box-sizing: border-box; border-radius: 10px; }
+        .slide.active { display: flex; }
+        h1 { color: #00d4ff; }
+        .controls { position: absolute; bottom: 20px; width: 100%; display: flex; justify-content: center; gap: 20px; }
+        button { padding: 10px 20px; cursor: pointer; background: #00d4ff; border: none; border-radius: 5px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="slides">
+    <div class="slide active">
+        <h1>Mastering Your Pi Agent</h1>
+        <p>A Quick Guide to Supercharging Your Workflow</p>
+    </div>
+    <div class="slide">
+        <h1>What am I?</h1>
+        <p>I am your AI coding assistant, deeply integrated into your environment.</p>
+        <p>Think of me as a pair programmer who never sleeps and knows your codebase.</p>
+    </div>
+    <div class="slide">
+        <h1>My Power Tools</h1>
+        <ul style="text-align: left;">
+            <li><b>read:</b> Inspecting files and code.</li>
+            <li><b>bash:</b> Executing commands (ls, grep, tests).</li>
+            <li><b>edit:</b> Precise file modification.</li>
+            <li><b>write:</b> Creating new projects and files.</li>
+        </ul>
+    </div>
+    <div class="slide">
+        <h1>Best Practices</h1>
+        <p>1. <b>Be Specific:</b> The clearer the prompt, the better the output.</p>
+        <p>2. <b>Iterate:</b> Don't ask for a miracle in one go. Ask for a structure, then ask for features.</p>
+        <p>3. <b>Leverage Tools:</b> Tell me <i>how</i> to work. "List the files," "Read the config," "Run the test."</p>
+    </div>
+    <div class="slide">
+        <h1>Let's Build!</h1>
+        <p>I am ready to help you manage your Nix config or build anything else.</p>
+        <p>Just tell me what you want to achieve!</p>
+    </div>
+</div>
+
+<div class="controls">
+    <button onclick="prevSlide()">Previous</button>
+    <button onclick="nextSlide()">Next</button>
+</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    function showSlide(n) {
+        slides.forEach(s => s.classList.remove('active'));
+        currentSlide = (n + slides.length) % slides.length;
+        slides[currentSlide].classList.add('active');
+    }
+    function nextSlide() { showSlide(currentSlide + 1); }
+    function prevSlide() { showSlide(currentSlide - 1); }
+</script>
+
+</body>
+</html>

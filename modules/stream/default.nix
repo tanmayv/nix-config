@@ -23,18 +23,18 @@
       }
     );
 
-    plugins = with pkgs.obs-studio-plugins; [
-      wlrobs
-      obs-backgroundremoval
-      obs-pipewire-audio-capture
-      distroav
-      droidcam-obs
-      obs-shaderfilter
-      obs-gstreamer
-      obs-vkcapture
-      obs-retro-effects
-      obs-advanced-masks
-      obs-aitum-multistream
-    ];
+    # plugins = with pkgs.obs-studio-plugins; [
+    #   wlrobs
+    #   obs-backgroundremoval
+    #   obs-pipewire-audio-capture
+    #   distroav
+    #   droidcam-obs
+    #   obs-shaderfilter
+    #   obs-gstreamer
+    #   obs-vkcapture
+    #   obs-retro-effects
+    #   obs-advanced-masks
+    #   obs-aitum-multistream
+    # ];
   };
 }

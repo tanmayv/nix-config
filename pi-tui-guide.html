@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pi TUI Guide</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 900px; margin: 0 auto; padding: 20px; background-color: #f4f7f6; }
+        h1 { color: #2c3e50; border-bottom: 2px solid #00d4ff; padding-bottom: 10px; }
+        h2 { color: #00d4ff; margin-top: 30px; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        code { background: #eee; padding: 2px 4px; border-radius: 4px; font-family: monospace; }
+        pre { background: #272822; color: #f8f8f2; padding: 15px; border-radius: 5px; overflow-x: auto; }
+        ul { padding-left: 20px; }
+        li { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+    <h1>Mastering the Pi TUI</h1>
+    
+    <div class="card">
+        <h2>What is the Pi TUI?</h2>
+        <p>The Pi Terminal User Interface (TUI) is a powerful, component-based system that lets you build rich, interactive experiences directly in your terminal. It's designed for extensions and custom tools to present users with dialogs, selectors, loaders, and even custom editors.</p>
+    </div>
+
+    <div class="card">
+        <h2>Key Features</h2>
+        <ul>
+            <li><strong>Component-Based:</strong> Build complex UIs using standard blocks like <code>Text</code>, <code>Box</code>, and <code>Container</code>.</li>
+            <li><strong>Responsive Overlays:</strong> Easily spawn modal dialogs or side panels that handle their own positioning and visibility.</li>
+            <li><strong>Theme Awareness:</strong> Components automatically adhere to Pi's current color theme via a provided <code>theme</code> object.</li>
+            <li><strong>Advanced Input:</strong> Full support for keyboard events, IME for CJK, and even custom input logic (perfect for Vim-like modes).</li>
+            <li><strong>Media Support:</strong> Render Markdown and images directly in the terminal (Kitty, iTerm2, WezTerm).</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2>How to Extend Pi</h2>
+        <ol>
+            <li><strong>Create a Component:</strong> Implement the <code>Component</code> interface (<code>render</code>, <code>handleInput</code>, <code>invalidate</code>).</li>
+            <li><strong>Use the API:</strong> Use <code>ctx.ui.custom()</code> in extensions or <code>pi.ui.custom()</code> in tools to render your component.</li>
+            <li><strong>Follow Patterns:</strong> Don't reinvent the wheel! Use built-in helpers:
+                <ul>
+                    <li><code>SelectList</code> for picking options.</li>
+                    <li><code>BorderedLoader</code> for async tasks.</li>
+                    <li><code>SettingsList</code> for toggles.</li>
+                    <li><code>CustomEditor</code> for replacing the main input.</li>
+                </ul>
+            </li>
+        </ol>
+    </div>
+
+    <div class="card">
+        <h2>Development Pro-Tips</h2>
+        <ul>
+            <li><strong>Performance:</strong> Always cache your rendered output and use <code>invalidate()</code> to trigger updates.</li>
+            <li><strong>Safety:</strong> Use <code>truncateToWidth()</code> to ensure your UI looks great on any terminal size.</li>
+            <li><strong>Theming:</strong> Never hardcode colors. Always use the <code>theme</code> object provided in the render context.</li>
+        </ul>
+    </div>
+
+</body>
+</html>

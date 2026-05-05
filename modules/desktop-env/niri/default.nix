@@ -1,4 +1,37 @@
 {pkgs, config, host, lib, helper, ...}: let
+  swayidleStyle = pkgs.writeText "style.css" ''
+window {
+  background-color: black;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+#input-box {
+  background: #1e1e2e;
+  border: 1px solid #313244;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+entry {
+  background: transparent;
+  color: #cdd6f4;
+  caret-color: #cdd6f4;
+}
+
+#label {
+  color: #cdd6f4;
+}
+'';
+  swayidleLauncher = pkgs.writeShellScriptBin "swayidle-start" ''
+exec ${pkgs.swayidle}/bin/swayidle -w \
+  timeout 300 '${pkgs.gtklock}/bin/gtklock -g Adwaita-dark -s ${swayidleStyle}' \
+  timeout 600 '${pkgs.niri}/bin/niri msg action output all dpms off' \
+    resume '${pkgs.niri}/bin/niri msg action output all dpms on' \
+  timeout 1800 '${pkgs.systemd}/bin/systemctl suspend' \
+  before-sleep '${pkgs.gtklock}/bin/gtklock -g Adwaita-dark -s ${swayidleStyle}'
+'';
   niri-find-window = ''
 SEARCH_METHOD_FLAG=$1
 SCRATCH_WIN_NAME=$2
@@ -177,7 +210,7 @@ fi
     imagemagick
     rofi
     waybar
-    swww
+    awww
     mako
     bibata-cursors
     jetbrains-mono
@@ -185,7 +218,7 @@ fi
     papirus-icon-theme
     xwayland-satellite
     gtklock
-    swayidle
+    swayidleLauncher
     grim
     slurp
     wl-clipboard
@@ -211,7 +244,6 @@ fi
     };
   };
 
-   # XDG portals
   xdg.portal.enable = true;
   xdg.portal.extraPortals = with pkgs; [
     xdg-desktop-portal-wlr  # Wayland-native (for screen sharing, screenshots, etc.)

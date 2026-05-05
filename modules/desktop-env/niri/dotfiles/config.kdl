@@ -7,6 +7,8 @@ spawn-at-startup "mako"
 spawn-at-startup "swww-daemon"
 spawn-at-startup "waybar"
 spawn-sh-at-startup "brightnessctl --device='asus::kbd_backlight' set 2"
+spawn-sh-at-startup "brightnessctl --device='amdgpu_bl1' set 60%"
+spawn-sh-at-startup "swayidle-start"
 
 // Input device configuration.
 // Find the full list of options on the wiki:
@@ -19,8 +21,7 @@ input {
             // For more information, see xkeyboard-config(7).
             layout "us,us"
             variant "dvorak,"
-            // options "grp:alt_space_toggle,ctrl:swapcaps"
-            options "grp:alt_space_toggle"
+            options "grp:alt_space_toggle,caps:ctrl_modifier"
         }
     }
 
@@ -492,8 +493,8 @@ binds {
     // Example brightness key mappings for brightnessctl.
     // You can use regular spawn with multiple arguments too (to avoid going through "sh"),
     // but you need to manually put each argument in separate "" quotes.
-    XF86MonBrightnessUp allow-when-locked=true { spawn "brightnessctl" "--device=amdgpu_bl2" "set" "+10%"; }
-    XF86MonBrightnessDown allow-when-locked=true { spawn "brightnessctl" "--device=amdgpu_bl2" "set" "10%-"; }
+    XF86MonBrightnessUp allow-when-locked=true { spawn "brightnessctl" "--device=amdgpu_bl1" "set" "+10%"; }
+    XF86MonBrightnessDown allow-when-locked=true { spawn "brightnessctl" "--device=amdgpu_bl1" "set" "10%-"; }
 
     // Keyboard backlight control
     XF86KbdBrightnessUp allow-when-locked=true { spawn "brightnessctl" "--device='asus::kbd_backlight'" "set" "+1"; }

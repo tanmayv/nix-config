@@ -16,9 +16,13 @@
 
   services.resolved = {
     enable = true;
-    dnssec = "false";
-    fallbackDns = [];
-    dnsovertls = "false";
+    settings = {
+      Resolve = {
+        DNSSEC = "false";
+        FallbackDNS = [];
+        DNSOverTLS = "false";
+      };
+    };
   };
 
   users.users.${host.username} = {
