@@ -24,12 +24,25 @@ entry {
   color: #cdd6f4;
 }
 '';
+  suspendIfNotOnAC = pkgs.writeShellScript "suspend-if-not-on-ac" ''
+    for type_file in /sys/class/power_supply/*/type; do
+      [ -e "$type_file" ] || continue
+      if [ "$(cat "$type_file")" = "Mains" ]; then
+        online_file="''${type_file%/type}/online"
+        if [ -r "$online_file" ] && [ "$(cat "$online_file")" = "1" ]; then
+          exit 0
+        fi
+      fi
+    done
+
+    exec ${pkgs.systemd}/bin/systemctl suspend
+  '';
   swayidleLauncher = pkgs.writeShellScriptBin "swayidle-start" ''
 exec ${pkgs.swayidle}/bin/swayidle -w \
   timeout 300 '${pkgs.gtklock}/bin/gtklock -g Adwaita-dark -s ${swayidleStyle}' \
   timeout 600 '${pkgs.niri}/bin/niri msg action output all dpms off' \
     resume '${pkgs.niri}/bin/niri msg action output all dpms on' \
-  timeout 1800 '${pkgs.systemd}/bin/systemctl suspend' \
+  timeout 1800 '${suspendIfNotOnAC}' \
   before-sleep '${pkgs.gtklock}/bin/gtklock -g Adwaita-dark -s ${swayidleStyle}'
 '';
   niri-find-window = ''

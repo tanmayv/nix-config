@@ -8,26 +8,37 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     niri.url = "github:sodiboo/niri-flake";
-    hyprland.url = "github:hyprwm/Hyprland";
-    hyprland.inputs.nixpkgs.follows = "nixpkgs";
     stylix = {
       url = "github:nix-community/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     home-manager = {
-      url = "github:nix-community/home-manager/release-25.05";
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    home-manager-core = {
+      url = "path:/home/tanmay/projects/nix/home-manager-core";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    extensions = {
+      url = "github:tanmayv/home-manager-extensions";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nvim-nix.follows = "nvim-nix";
+    };
+    nvim-nix = {
+      url = "path:/home/tanmay/projects/nix/neovim-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     apollo-flake.url = "github:nil-andreas/apollo-flake";
-    pi-mono.url = "github:lukasl-dev/pi-mono.nix";
     apollo-flake.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, sops-nix, niri, hyprland, apollo-flake, ... }@inputs:
+  outputs = { self, nixpkgs, sops-nix, niri, apollo-flake, home-manager, home-manager-core, extensions,... }@inputs:
   let
     overlays = [
       (final: prev: {
         librepods = prev.callPackage ./pkgs/librepods {};
+        openswarm = prev.callPackage ./pkgs/openswarm {};
       })
     ];
     mkHost = name: let
@@ -36,7 +47,7 @@
     in 
     nixpkgs.lib.nixosSystem {
       system = host.system;
-      specialArgs = { inherit host; inherit helper; inherit hyprland; inherit apollo-flake; inherit nixpkgs; }; # Make host 
+      specialArgs = { inherit host; inherit helper; inherit apollo-flake; inherit nixpkgs; }; # Make host 
       modules = [
           { nixpkgs.overlays = overlays; }
           (inputs.apollo-flake.nixosModules.${host.system}.default)
@@ -46,8 +57,8 @@
           sops-nix.nixosModules.sops
           inputs.stylix.nixosModules.stylix
           niri.nixosModules.niri
-          inputs.pi-mono.nixosModules.default
           ./modules/core
+          ./modules/zsh/default.nix
           ./hosts/${name}/hardware-configuration.nix
           ./hosts/${name}/configuration.nix
       ];
@@ -58,5 +69,51 @@
       zephyrus = mkHost "zephyrus";
       dawnstar = mkHost "dawnstar";
     };
+
+    homeConfigurations = builtins.listToAttrs (map (name:
+      let
+        host = import ./hosts/${name}/host.nix;
+        pkgs = nixpkgs.legacyPackages.${host.system};
+        userSettings = {
+          username = host.username;
+          editor = "nvim";
+          config-location = "~/nix-config";
+          local_agent_knowledge_dir = "~/.local/share/agent-knowledge";
+          enable-ai-workflow = true;
+          enable-agent-tracker = true;
+          enable-pi-agent = true;
+          enable-neovim = true;
+          enable_bash_over_zsh = false;
+          import-extras = true;
+          sessionizerSearchPaths = [ "~" "~/projects/nix" ];
+          ai_features = {
+            enable_ai_ssa_creator_skill = false;
+            enable_tmux_based_agent_comms = true;
+            enable_agent_knowledge = false;
+            enable_home_manager_skill = false;
+          };
+        };
+      in {
+        inherit name;
+        value = home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          extraSpecialArgs = {
+            inherit host userSettings;
+            inputs = inputs // home-manager-core.inputs;
+          };
+          modules = [
+            ./hosts/${name}/home.nix
+            home-manager-core.homeManagerModules.default
+            extensions.homeManagerModules.ai-agents
+            extensions.homeManagerModules.tasks
+            ({ lib, ... }: {
+              home.username = host.username;
+              home.homeDirectory = host.homeDirectory;
+              home.stateVersion = lib.mkForce "25.11";
+            })
+          ];
+        };
+      }
+    ) [ "dragonfly" "zephyrus" "dawnstar" ]);
   };
 }

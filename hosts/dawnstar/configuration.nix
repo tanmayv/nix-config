@@ -7,13 +7,10 @@
 {
   imports =
     [ # Include the results of the hardware scan.
-      ../../modules/neovim/default.nix
       ../../modules/git/default.nix
       ../../modules/apollo/default.nix
       ../../modules/ghostty/default.nix
       ../../modules/yazi/default.nix
-      ../../modules/tmux/default.nix
-      ../../modules/zsh/default.nix
       ../../modules/atuin/default.nix
       ../../modules/gpg-yubi-ssh/default.nix
       ../../modules/desktop-env/niri/default.nix
@@ -53,11 +50,6 @@
 
   # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
-
-  apps.nvimPure = {
-    enable = true;
-    extraPackages = with pkgs; [ ripgrep fd ];
-  };
 
   apps.ghostty = {
     enable = true;

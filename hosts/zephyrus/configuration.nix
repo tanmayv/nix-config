@@ -7,24 +7,18 @@
 {
   imports =
     [ # Include the results of the hardware scan.
-      ../../modules/neovim/default.nix
       # ../../modules/pbs-vm/default.nix
       ../../modules/git/default.nix
       ../../modules/ghostty/default.nix
-      ../../modules/apollo/default.nix
+      # ../../modules/apollo/default.nix
       ../../modules/gpg-yubi-ssh/default.nix
-      ../../modules/xr/default.nix
+      # ../../modules/xr/default.nix
       ../../modules/yazi/default.nix
-      ../../modules/zsh/default.nix
-      ../../modules/stream/default.nix
-      ../../modules/tmux/default.nix
-      ../../modules/opencode/default.nix
-      ../../modules/atuin/default.nix
+      # ../../modules/stream/default.nix
+      # ../../modules/opencode/default.nix
       ../../modules/desktop-env/niri/default.nix
-      ../../modules/desktop-env/hyprland/default.nix
-      # ../../modules/desktop-env/plasma/default.nix
       ../../modules/steam/default.nix
-      ../../modules/beads/default.nix
+      # ../../modules/beads/default.nix
       ./networking.nix
       ./graphics.nix
       ./packages.nix
@@ -37,10 +31,6 @@
   hardware.keyboard.qmk.enable = true;
   virtualisation.docker.enable = true;
   services.flatpak.enable = true;
-  programs.pi.coding-agent = {
-    enable = true;
-  };
-
   
   virtualisation.docker.extraPackages = [ pkgs.docker-buildx ];
   virtualisation.libvirtd = {
@@ -106,15 +96,15 @@
     openFirewall = true;   # Automatically open firewall for Tailscale
   };
 
+  services.logind.settings.Login = {
+    HandleLidSwitchExternalPower = "ignore";
+    HandleLidSwitchDocked = "ignore";
+  };
+
 
   # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
-
-  apps.nvimPure = {
-    enable = true;
-    extraPackages = with pkgs; [ ripgrep fd ];
-  };
 
   apps.ghostty = {
     enable = true;

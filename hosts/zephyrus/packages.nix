@@ -14,10 +14,14 @@
 #   };
 # };
   environment.systemPackages = with pkgs; [
+    # Common CLI tools used by editor tooling (:checkhealth, pickers, etc.)
+    ripgrep
+    fd
+    nodejs
+    python3
+
     obsidian
-    codex
     gemini-cli
-    tmux
     gimp
     lazygit
     spotify
@@ -26,5 +30,6 @@
     freecad
     davinci-resolve
     ksnip
+    openswarm
   ];
 }

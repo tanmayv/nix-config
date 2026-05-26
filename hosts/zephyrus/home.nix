@@ -1,5 +1,16 @@
 { pkgs, ... }:
 {
+  imports = [
+    ../../modules/file-manager/default.nix
+  ];
+
+  programs.guiFileManager.enable = true;
+
+  services.agent-tracker.registries = [
+    { name = "mundus"; url = "https://agents.mundus.in"; }
+  ];
+  services.agent-tracker.registryAuth = false;
+
  # programs.gpg = {
 #   enable = true;
 #

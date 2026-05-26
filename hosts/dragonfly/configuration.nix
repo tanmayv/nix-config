@@ -7,14 +7,12 @@
 {
   imports =
     [ # Include the results of the hardware scan.
-      ../../modules/neovim/default.nix
       ../../modules/pbs-vm/default.nix
       ../../modules/git/default.nix
       ../../modules/ghostty/default.nix
       ../../modules/apollo/default.nix
       ../../modules/gpg-yubi-ssh/default.nix
       ../../modules/desktop-env/plasma/default.nix
-      ../../modules/desktop-env/hyprland/default.nix
       ./networking.nix
       ./hardware-configuration.nix
     ];
@@ -39,11 +37,6 @@
 
 
 
-
-  apps.nvimPure = {
-    enable = true;
-    extraPackages = with pkgs; [ ripgrep fd ];
-  };
 
   apps.ghostty = {
     enable = true;
