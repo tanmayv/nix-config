@@ -1,4 +1,4 @@
-{ config, host, ... }:{
+{ config, host, pkgs, ... }:{
   networking.networkmanager.enable = true;  # Enables wireless support via wpa_supplicant.
   networking.hostName = host.hostname;
   networking.nameservers = [
@@ -32,7 +32,36 @@
     ];
   };
 
-  hardware.bluetooth.enable = true;
+  hardware.bluetooth = {
+    enable = true;
+    powerOnBoot = true;
+  };
+
+  services.blueman.enable = true;
+
+  # The onboard MediaTek Bluetooth adapter can disappear from BlueZ after
+  # rfkill/autosuspend, leaving blueman with "Adapter is None".
+  boot.extraModprobeConfig = ''
+    options btusb reset=1 enable_autosuspend=0
+  '';
+
+  services.udev.extraRules = ''
+    ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="0489", ATTR{idProduct}=="e0f6", TEST=="power/control", ATTR{power/control}="on"
+  '';
+
+  systemd.services.rfkill-unblock-bluetooth = {
+    description = "Unblock Bluetooth rfkill before starting bluetoothd";
+    before = [ "bluetooth.service" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.util-linux}/bin/rfkill unblock bluetooth";
+    };
+  };
+
+  systemd.services.bluetooth = {
+    wants = [ "rfkill-unblock-bluetooth.service" ];
+    after = [ "rfkill-unblock-bluetooth.service" ];
+  };
 
   services.resolved = {
     enable = true;

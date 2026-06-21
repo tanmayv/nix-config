@@ -31,9 +31,18 @@
     };
     apollo-flake.url = "github:nil-andreas/apollo-flake";
     apollo-flake.inputs.nixpkgs.follows = "nixpkgs";
+    zen-browser = {
+      url = "github:0xc000022070/zen-browser-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
+    heimdall = {
+      url = "path:/home/tanmay/heimdall-agent-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, sops-nix, niri, apollo-flake, home-manager, home-manager-core, extensions,... }@inputs:
+  outputs = { self, nixpkgs, sops-nix, niri, apollo-flake, home-manager, home-manager-core, extensions, heimdall, ... }@inputs:
   let
     overlays = [
       (final: prev: {
@@ -47,7 +56,7 @@
     in 
     nixpkgs.lib.nixosSystem {
       system = host.system;
-      specialArgs = { inherit host; inherit helper; inherit apollo-flake; inherit nixpkgs; }; # Make host 
+      specialArgs = { inherit host; inherit helper; inherit apollo-flake; inherit nixpkgs; zen-browser = inputs.zen-browser; }; # Make host 
       modules = [
           { nixpkgs.overlays = overlays; }
           (inputs.apollo-flake.nixosModules.${host.system}.default)
@@ -73,7 +82,11 @@
     homeConfigurations = builtins.listToAttrs (map (name:
       let
         host = import ./hosts/${name}/host.nix;
-        pkgs = nixpkgs.legacyPackages.${host.system};
+        pkgs = import nixpkgs {
+          system = host.system;
+          config.allowUnfree = true;
+          inherit overlays;
+        };
         userSettings = {
           username = host.username;
           editor = "nvim";
@@ -106,6 +119,7 @@
             home-manager-core.homeManagerModules.default
             extensions.homeManagerModules.ai-agents
             extensions.homeManagerModules.tasks
+            heimdall.homeModules.default
             ({ lib, ... }: {
               home.username = host.username;
               home.homeDirectory = host.homeDirectory;

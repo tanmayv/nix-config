@@ -6,10 +6,10 @@
 
   programs.guiFileManager.enable = true;
 
-  services.agent-tracker.registries = [
+  services.broccoli-comms.tracker.registries = [
     { name = "mundus"; url = "https://agents.mundus.in"; }
   ];
-  services.agent-tracker.registryAuth = false;
+  services.broccoli-comms.tracker.registryAuth = false;
 
  # programs.gpg = {
 #   enable = true;
